@@ -1,0 +1,37 @@
+.mover-direita{
+	text-align: right;
+}
+
+.mover-baixo{
+	margin-top: 15px;
+}
+
+.acoes-modal {
+	text-align: right;
+}
+
+#btn-SalvarEmpresa, #btn-SalvarFilial {
+	background-color: green;
+	color: #ffffff;
+
+}
+
+.botoes-modal{
+	margin-bottom: 10px;
+	margin-right: 10px;
+}
+
+.campos-modal{
+	margin-top: 10px;
+	margin-right: 10px;
+}
+
+#ovBTN-AdicionarFilial {
+	margin-top: 10px;
+}
+
+.ativaCB, .cooperativaCB{
+	margin-top: 17px;
+	font-size: 28px;
+}
+
