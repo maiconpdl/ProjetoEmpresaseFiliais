@@ -8,7 +8,6 @@ var empresaAberta = null;
 function newEmpresa(){
 	return {
 
-		codigoEmpresa : '',
 		codigo : '',
 		nomeFantasia : '',
 		data : '',
@@ -37,9 +36,9 @@ function cadastraEmpresa(){
 	Empresa = newEmpresa();
 	Filiais = [];
 
-	if($(""))
 	
-	mostraFilial();
+	
+	//mostraFilial();
 	tipoDeCadastro = "Empresa";
 	$("#ovTXT-Codigo").val(Empresa.codigo);
 	$("#ovTXT-NomeFantasia").val(Empresa.nomeFantasia);
@@ -74,7 +73,7 @@ function cadastraEmpresa(){
 
 function salvarEmpresa(){
 
-
+	Empresa = newEmpresa();
 	Empresa.codigo = $("#ovTXT-Codigo").val();
 	Empresa.nomeFantasia = $("#ovTXT-NomeFantasia").val();
 	Empresa.data = $("#ovTXT-DataFundacao").val();
@@ -107,20 +106,21 @@ function salvarEmpresa(){
 	Empresa.email = $("#ovTXT-Email").val();
 	Empresa.telefone = $("#ovTXT-Telefone").val();
 	Empresa.filiais = Filiais;
-	empresaCadastrada = Empresas.filter(function(empresa){
+	var empresaCadastrada = Empresas.filter(function(empresa){
 		return empresa.codigo == Empresa.codigo;
 	}).length > 0;
 
-	if (empresaCadastrada) {
+	if (empresaCadastrada) 
 		Empresas.map(function(index, empresa){
-			if(empresa.codigo == Empresa.codigo){
-				empresa.situacao == Empresa.situacao;
-				alert("Passou");
-			}
+			if(empresa.codigo == Empresa.codigo)
+				empresa.nomeFantasia == Empresa.nomeFantasia;
+		//		alert("Passou");
+			
 		});
-	}else{
+	else
 		Empresas.push(Empresa);
-	}
+		//alert("passo no else");
+	
 
 	
 
@@ -167,7 +167,7 @@ function editarEmpresa(codigoEmpresa){
 		return empresa.codigo == codigoEmpresa;
 	})[0];
 
-	Filiais = editaEmpresa.filiais;
+	//Filiais = editaEmpresa.filiais;
 	empresaAberta = codigoEmpresa;
 
 	$("#ovTXT-Codigo").val(editaEmpresa.codigo);
@@ -201,7 +201,7 @@ function editarEmpresa(codigoEmpresa){
 	$("#ovTXT-Descricao").val(editaEmpresa.descricao);
 	$("#ovTXT-Email").val(editaEmpresa.email);
 	$("#ovTXT-Telefone").val(editaEmpresa.telefone);
-	mostraFilial();
+	//mostraFilial();
 	$("#modal-cadastroEmpresa").modal("show");
 	$("#ovTXT-Codigo").focus();
 	$("#ovTXT-Codigo").prop("disabled", true);
@@ -331,7 +331,7 @@ if(empresaAberta != null){
 }
 
 	$("#ovTab-Filiais tbody").html("");
-	acao.map(function(filial, index){
+	Filiais.map(function(filial, index){
 		let acoesFilial = 
 				 	 
 					  "<button type='button'"
