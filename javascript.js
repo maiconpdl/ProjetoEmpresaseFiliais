@@ -4,7 +4,6 @@ var Filiais = null;
 var Filial = null;
 var tipoDeCadastro = null;
 var empresaAberta = null;
-
 function newEmpresa(){
 	return {
 		codigo : '',
@@ -285,15 +284,27 @@ function salvarFilial(){
 	Filial.descricao = $("#ovTXT-DescricaoFilial").val();
 	Filial.sigla = $("#ovTXT-Sigla").val();
 	Filial.cnpj = $("#ovTXT-cnpjFilial").val();
-	Filial.inscricaoEstadual = $("#ovTXT-InscricaoEstadual");
-	Filial.situacao = $("#ovCB-SituacaoFilial");
-	Filial.cidade = $("#ovTXT-CidadeFilial");
-	Filial.cep = $("#ovTXT-cepFilial");
-	Filial.bairro = $("#ovTXT-BairroFilial");
-	Filial.centroDist = $("#ovCB-CentroDistribuicao");
-	Filial.endereco = $("#ovTXT-EnderecoFilial");
-	Filial.telefone = $("#ovTXT-TelefoneFilial");
-	Filial.email = $("#ovTXT-EmailFilial");
+	Filial.inscricaoEstadual = $("#ovTXT-InscricaoEstadual").val();
+	let CBSituacaoFilial = document.getElementById('ovCB-SituacaoFilial');
+	if (CBSituacaoFilial.checked) {
+		Filial.situacao = "Ativo";
+	}else{
+		Filial.situacao = "Inativo";
+	}
+
+	Filial.cidade = $("#ovTXT-CidadeFilial").val();
+	Filial.cep = $("#ovTXT-cepFilial").val();
+	Filial.bairro = $("#ovTXT-BairroFilial").val();
+	let CBCentroDist = document.getElementById('ovCB-CentroDistribuicao');
+	if (CBCentroDist.checked) {
+		Filial.cooperativa = "Sim";
+	}else{
+		Filial.cooperativa = "Não";
+	}
+
+	Filial.endereco = $("#ovTXT-EnderecoFilial").val();
+	Filial.telefone = $("#ovTXT-TelefoneFilial").val();
+	Filial.email = $("#ovTXT-EmailFilial").val();
 	
 
 	filialCadastrada = Filiais.filter(function(filial){
@@ -325,18 +336,7 @@ function salvarFilial(){
 
 
 function mostraFilial(){
-var acao = null;
-if(empresaAberta != null){
 
-	empresaSelecionada = Empresas.filter(function(empresa, index){
-		return empresa.codigo == empresaAberta;
-	})[0];
-
-	acao = empresaSelecionada.filiais;
-
-}else{
-	acao = Filiais;
-}
 
 	$("#ovTab-Filiais tbody").html("");
 	Filiais.map(function(filial, index){
@@ -359,8 +359,9 @@ if(empresaAberta != null){
 
 		let line = "<tr>"
 		+ "<td>" + filial.codigo + "</td>"
-		+ "<td>" + filial.codigo + "</td>"
+		+ "<td>" + filial.cnpj + "</td>"
 		+ "<td>" + filial.descricao + "</td>"
+		+ "<td>" + filial.situacao + "</td>"
 		+ "<td>" + acoesFilial + "</td>"
 		+ "</tr>";
 		$("#ovTab-Filiais tbody").append(line);
@@ -374,37 +375,37 @@ if(empresaAberta != null){
 function editarFilial(codigoFilial){
 
 	tipoDeCadastro = "Filial";
-	editaFilial = Filiais.filter(function(filial, index){
+	Filial = Filiais.filter(function(filial, index){
 		return filial.codigo == codigoFilial;
 	})[0];
 
-	$("#ovTXT-CodigoFilial").val(editaFilial.codigo);
-	$("#ovTXT-DescricaoFilial").val(editaFilial.descricao);
-	$("#ovTXT-Sigla").val(editaFilial.sigla);
-	$("#ovTXT-cnpjFilial").val(editaFilial.cnpj);
-	$("#ovTXT-InscricaoFilial").val(editaFilial.inscricaoEstadual);
+	$("#ovTXT-CodigoFilial").val(Filial.codigo);
+	$("#ovTXT-DescricaoFilial").val(Filial.descricao);
+	$("#ovTXT-Sigla").val(Filial.sigla);
+	$("#ovTXT-cnpjFilial").val(Filial.cnpj);
+	$("#ovTXT-InscricaoFilial").val(Filial.inscricaoEstadual);
 
 	let CBSituacaoFilial = document.getElementById('ovCB-SituacaoFilial');
-	if(editaFilial.situacao == "Ativo"){
+	if(Filial.situacao == "Ativo"){
 		CBSituacaoFilial.checked = true;
 	}else{
 		CBSituacaoFilial.checked = false;
 	}
 
 	let CBCentroDist = document.getElementById('ovCB-CentroDistribuicao');
-	if(editaFilial.cooperativa == "Sim"){
+	if(Filial.cooperativa == "Sim"){
 		CBCentroDist.checked = true;
 	}else{
 		CBCentroDist.checked = false;
 	}
 
 
-	$("#ovTXT-CidadeFilial").val(editaFilial.cidade);
-	$("#ovTXT-cepFilial").val(editaFilial.cep);
-	$("#ovTXT-BairroFilial").val(editaFilial.bairro);	
-	$("#ovTXT-EnderecoFilial").val(editaFilial.endereco);
-	$("#ovTXT-Telefone").val(editaFilial.telefone);
-	$("#ovTXT-Email").val(editaFilial.email);
+	$("#ovTXT-CidadeFilial").val(Filial.cidade);
+	$("#ovTXT-cepFilial").val(Filial.cep);
+	$("#ovTXT-BairroFilial").val(Filial.bairro);	
+	$("#ovTXT-EnderecoFilial").val(Filial.endereco);
+	$("#ovTXT-TelefoneFilial").val(Filial.telefone);
+	$("#ovTXT-EmailFilial").val(Filial.email);
 	
 	mostraBotoesModal();
 	$("#modal-cadastroFilial").modal("show");
@@ -509,7 +510,7 @@ $(document).ready(function(){
 	$(document).on("click", "#ovBTN-EditarEmpresa", editarEmpresa);
 	$(document).on("click", "#ovBTN-AdicionarFilial", cadastraFilial);
 	$(document).on("click", "#btn-SalvarFilial", salvarFilial);
-	$(document).on("click", "#ovBTN-CancelaFilial", fechaCadFilial);
+	//$(document).on("click", "#ovBTN-CancelaFilial", fechaCadFilial);
 	$(document).on("click", "#ovBTN-EditarFilial", editarFilial);
 
 	editarEvent();
