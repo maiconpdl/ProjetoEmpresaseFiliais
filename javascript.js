@@ -63,6 +63,7 @@ function cadastraEmpresa(){
 	$("#ovTXT-Email").val(Empresa.email);
 	$("#ovTXT-Telefone").val(Empresa.telefone);
 	$("#ovTXT-Codigo").prop("disabled", false);
+	$("#empresa-tab").tab("show");
 	//$("#filial-tab").prop("disabled", true);
 	mostraBotoesModal();
 	$("#modal-cadastroEmpresa").modal("show");
@@ -197,6 +198,7 @@ function editarEmpresa(codigoEmpresa){
 	$("#ovTXT-Descricao").val(Empresa.descricao);
 	$("#ovTXT-Email").val(Empresa.email);
 	$("#ovTXT-Telefone").val(Empresa.telefone);
+	$("#empresa-tab").tab("show");
 	mostraFilial();
 	$("#modal-cadastroEmpresa").modal("show");
 	$("#ovTXT-Codigo").focus();
@@ -206,12 +208,12 @@ function editarEmpresa(codigoEmpresa){
 
 function removerEmpresa(codigoEmpresa){
 	
-	var empresaSel = Empresas.filter(function(empresa, index){
+	var Empresa = Empresas.filter(function(empresa, index){
 		return empresa.codigo == codigoEmpresa;
 	})[0];
 
 	if(!confirm("Remover Empresa "
-		+ empresaSel.nomeFantasia + "?"))
+		+ Empresa.nomeFantasia + "?"))
 		return;
 	
 	Empresas = Empresas.filter(function(empresa, index){
@@ -258,11 +260,13 @@ function cadastraFilial(){
 	$("#ovTXT-Sigla").val(Filial.sigla);
 	$("#ovTXT-cnpjFilial").val(Filial.cnpj);
 	$("#ovTXT-InscricaoFilial").val(Filial.inscricaoEstadual);
-	$("#ovCB-SituacaoFilial").val(Filial.situacao);
+	let CBSituacaoFilial = document.getElementById('ovCB-SituacaoFilial');
+	CBSituacaoFilial.checked = false;
 	$("#ovTXT-CidadeFilial").val(Filial.cidade);
 	$("#ovTXT-cepFilial").val(Filial.cep);
 	$("#ovTXT-BairroFilial").val(Filial.bairro);
-	$("#ovCB-CentroDistribuicao").val(Filial.centroDist);
+	let CBCentroDist = document.getElementById('ovCB-CentroDistribuicao');
+	CBCentroDist.checked = false;
 	$("#ovTXT-EnderecoFilial").val(Filial.endereco);
 	$("#ovTXT-TelefoneFilial").val(Filial.telefone);
 	$("#ovTXT-EmailFilial").val(Filial.email);
@@ -279,6 +283,17 @@ function salvarFilial(){
 
 	Filial.codigo = $("#ovTXT-CodigoFilial").val();
 	Filial.descricao = $("#ovTXT-DescricaoFilial").val();
+	Filial.sigla = $("#ovTXT-Sigla").val();
+	Filial.cnpj = $("#ovTXT-cnpjFilial").val();
+	Filial.inscricaoEstadual = $("#ovTXT-InscricaoEstadual");
+	Filial.situacao = $("#ovCB-SituacaoFilial");
+	Filial.cidade = $("#ovTXT-CidadeFilial");
+	Filial.cep = $("#ovTXT-cepFilial");
+	Filial.bairro = $("#ovTXT-BairroFilial");
+	Filial.centroDist = $("#ovCB-CentroDistribuicao");
+	Filial.endereco = $("#ovTXT-EnderecoFilial");
+	Filial.telefone = $("#ovTXT-TelefoneFilial");
+	Filial.email = $("#ovTXT-EmailFilial");
 	
 
 	filialCadastrada = Filiais.filter(function(filial){
@@ -286,7 +301,7 @@ function salvarFilial(){
 	}).length > 0;
 
 	if (filialCadastrada) {
-		Filiais.map(function(index, filial){
+		Filiais.map(function(filial, index){
 			if(filial.codigo == Filial.codigo){
 				filial.situacao == Filial.situacao;
 				alert("Passou");
