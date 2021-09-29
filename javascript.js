@@ -178,7 +178,7 @@ function editarEmpresa(codigoEmpresa){
 	}else{
 		CBSituacao.checked = false;
 	}
-
+ 
 	let CBCooperativa = document.getElementById('ovCB-Cooperativa');
 	if(Empresa.cooperativa == "Sim"){
 		CBCooperativa.checked = true;
