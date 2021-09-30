@@ -327,7 +327,6 @@ function salvarFilial(){
 
 
 
-
 	if($("#ovTXT-CodigoFilial").val() == "") {
 		alert("Preencha todos os campos obrigatórios!");
 		$("#ovTXT-CodigoFilial").css("border", '1px solid red');
