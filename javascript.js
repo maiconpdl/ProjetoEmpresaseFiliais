@@ -72,6 +72,46 @@ function cadastraEmpresa(){
 
 function salvarEmpresa(){
 
+	$("#ovTXT-Codigo").css("border", '1px solid grey');
+	$("#ovTXT-NomeFantasia").css("border", '1px solid grey');
+	$("#ovTXT-RazaoSocial").css("border", '1px solid grey');
+	$("#ovTXT-CNPJ").css("border", '1px solid grey');
+	$("#ovTXT-Endereco").css("border", '1px solid grey');
+
+
+
+
+	if($("#ovTXT-Codigo").val() == "") {
+		alert("Preencha todos os campos obrigatórios!");
+		$("#ovTXT-Codigo").css("border", '1px solid red');
+		return;
+
+	}else{
+		if($("#ovTXT-NomeFantasia").val() == "") {
+			alert("Preencha todos os campos obrigatórios!");
+			$("#ovTXT-NomeFantasia").css("border", '1px solid red');
+			return;
+		}else{
+			if($("#ovTXT-RazaoSocial").val() == "") {
+				alert("Preencha todos os campos obrigatórios!");
+				$("#ovTXT-RazaoSocial").css("border", '1px solid red');
+				return;
+			}else{
+				if($("#ovTXT-CNPJ").val() == "") {
+					alert("Preencha todos os campos obrigatórios!");
+					$("#ovTXT-CNPJ").css("border", '1px solid red');
+					return;
+				}else{
+					if($("#ovTXT-Endereco").val() == "") {
+						alert("Preencha todos os campos obrigatórios!");
+						$("#ovTXT-Endereco").css("border", '1px solid red');
+						return;
+					}
+				}
+			}
+		}
+	}
+	
 
 	Empresa.codigo = $("#ovTXT-Codigo").val();
 	Empresa.nomeFantasia = $("#ovTXT-NomeFantasia").val();
@@ -114,12 +154,12 @@ function salvarEmpresa(){
 		Empresas.map(function(empresa, index){
 			if(empresa.codigo == empresaAberta)
 				empresa.nomeFantasia == Empresa.nomeFantasia;		
-			
+
 		});
 
 	else
 		Empresas.push(Empresa);
-	
+
 
 	$("#modal-cadastroEmpresa").modal("hide");
 	mostraEmpresa();
@@ -130,18 +170,18 @@ function mostraEmpresa(){
 	$("#ovTab-Empresas tbody").html("");
 	Empresas.map(function(empresa, index){
 		let acoesEmpresa = "<button type='button'"
-					+ "class='btn btn-EditarEmpresa btn-primary'"
-					+ "data-codigoempresa='" + empresa.codigo + "'"
-					+ "id='ovBTN-Editar'>"
-					+ "<i class='fa fa-pencil-alt'>" + "</i>"
-					+ "</button>"
-					+ " " 
-					+ "<button type='button'"
-					+ "class='btn btn-RemoverEmpresa btn-danger'"
-					+ "data-codigoempresa='" + empresa.codigo + "'>"
-					
-					+ "<i class=\"fa fa-trash-alt\">" + "</i>"
-					+ "</button>";
+		+ "class='btn btn-EditarEmpresa btn-primary'"
+		+ "data-codigoempresa='" + empresa.codigo + "'"
+		+ "id='ovBTN-Editar'>"
+		+ "<i class='fa fa-pencil-alt'>" + "</i>"
+		+ "</button>"
+		+ " " 
+		+ "<button type='button'"
+		+ "class='btn btn-RemoverEmpresa btn-danger'"
+		+ "data-codigoempresa='" + empresa.codigo + "'>"
+
+		+ "<i class=\"fa fa-trash-alt\">" + "</i>"
+		+ "</button>";
 
 		let line = "<tr>"
 		+ "<td>" + empresa.codigo + "</td>"
@@ -177,7 +217,7 @@ function editarEmpresa(codigoEmpresa){
 	}else{
 		CBSituacao.checked = false;
 	}
- 
+
 	let CBCooperativa = document.getElementById('ovCB-Cooperativa');
 	if(Empresa.cooperativa == "Sim"){
 		CBCooperativa.checked = true;
@@ -280,6 +320,40 @@ function cadastraFilial(){
 
 function salvarFilial(){
 
+	$("#ovTXT-CodigoFilial").css("border", '1px solid grey');
+	$("#ovTXT-DescricaoFilial").css("border", '1px solid grey');
+	$("#ovTXT-cnpjFilial").css("border", '1px solid grey');
+	$("#ovTXT-Endereco").css("border", '1px solid grey');
+
+
+
+
+	if($("#ovTXT-CodigoFilial").val() == "") {
+		alert("Preencha todos os campos obrigatórios!");
+		$("#ovTXT-CodigoFilial").css("border", '1px solid red');
+		return;
+
+	}else{
+		if($("#ovTXT-DescricaoFilial").val() == "") {
+			alert("Preencha todos os campos obrigatórios!");
+			$("#ovTXT-DescricaoFilial").css("border", '1px solid red');
+			return;
+		}else{
+			if($("#ovTXT-cnpjFilial").val() == "") {
+				alert("Preencha todos os campos obrigatórios!");
+				$("#ovTXT-cnpjFilial").css("border", '1px solid red');
+				return;
+			}else{
+				if($("#ovTXT-EnderecoFilial").val() == "") {
+					alert("Preencha todos os campos obrigatórios!");
+					$("#ovTXT-EnderecoFilial").css("border", '1px solid red');
+					return;
+				}
+			}
+		}
+	}
+
+
 	Filial.codigo = $("#ovTXT-CodigoFilial").val();
 	Filial.descricao = $("#ovTXT-DescricaoFilial").val();
 	Filial.sigla = $("#ovTXT-Sigla").val();
@@ -297,9 +371,9 @@ function salvarFilial(){
 	Filial.bairro = $("#ovTXT-BairroFilial").val();
 	let CBCentroDist = document.getElementById('ovCB-CentroDistribuicao');
 	if (CBCentroDist.checked) {
-		Filial.cooperativa = "Sim";
+		Filial.centroDist = "Sim";
 	}else{
-		Filial.cooperativa = "Não";
+		Filial.centroDist = "Não";
 	}
 
 	Filial.endereco = $("#ovTXT-EnderecoFilial").val();
@@ -341,20 +415,20 @@ function mostraFilial(){
 	$("#ovTab-Filiais tbody").html("");
 	Filiais.map(function(filial, index){
 		let acoesFilial = 
-				 	 
-					  "<button type='button'"
-					+ "class='btn btn-EditarFilial btn-primary'"
-					+ "data-codigofilial='" + filial.codigo + "'"
-					+ "id='ovBTN-EditarF'>"
-					+ "<i class='fa fa-pencil-alt'>" + "</i>"
-					+ "</button>"
-					+ " " 
-					+ "<button type='button'"
-					+ "class='btn btn-RemoverFilial btn-danger'"
-					+ "data-codigofilial='" + filial.codigo + "'"
-					+ "data-bs-dismiss='modal-cadastroFilial'>"
-					+ "<i class=\"fa fa-trash-alt\">" + "</i>"
-					+ "</button>";
+
+		"<button type='button'"
+		+ "class='btn btn-EditarFilial btn-primary'"
+		+ "data-codigofilial='" + filial.codigo + "'"
+		+ "id='ovBTN-EditarF'>"
+		+ "<i class='fa fa-pencil-alt'>" + "</i>"
+		+ "</button>"
+		+ " " 
+		+ "<button type='button'"
+		+ "class='btn btn-RemoverFilial btn-danger'"
+		+ "data-codigofilial='" + filial.codigo + "'"
+		+ "data-bs-dismiss='modal-cadastroFilial'>"
+		+ "<i class=\"fa fa-trash-alt\">" + "</i>"
+		+ "</button>";
 
 
 		let line = "<tr>"
@@ -429,7 +503,7 @@ function removerFilial(codigoFilial){
 	})[0];
 
 	if(!confirm("Remover a filial "
-		 + filialSel.descricao + "?"))
+		+ filialSel.descricao + "?"))
 		return;
 	
 	editaEmpresa2.filiais = editaEmpresa2.filiais.filter(function(filial, index){
@@ -487,14 +561,14 @@ function fechaCadFilial(){
 function mostraBotoesModal(){
 	$(".divBTN-Modal").html("");
 	let botoes = 
-			  "<button type='button'" 
-			+ "class='btn'"
-			+ "id='btn-Salvar" + tipoDeCadastro + "'>Salvar</button>"
-			+ " "
-	        + "<button type='button'"
-	        + "class='btn btn-danger'"
-	        + "id='ovBTN-Cancela" + tipoDeCadastro + "'"
-	        + "data-bs-dismiss='modal'>Cancelar</button>";
+	"<button type='submit'" 
+	+ "class='btn'"
+	+ "id='btn-Salvar" + tipoDeCadastro + "'>Salvar</button>"
+	+ " "
+	+ "<button type='button'"
+	+ "class='btn btn-danger'"
+	+ "id='ovBTN-Cancela" + tipoDeCadastro + "'"
+	+ "data-bs-dismiss='modal'>Cancelar</button>";
 	let line = botoes;
 	$(".divBTN-Modal").append(line);
 }
@@ -510,7 +584,6 @@ $(document).ready(function(){
 	$(document).on("click", "#ovBTN-EditarEmpresa", editarEmpresa);
 	$(document).on("click", "#ovBTN-AdicionarFilial", cadastraFilial);
 	$(document).on("click", "#btn-SalvarFilial", salvarFilial);
-	//$(document).on("click", "#ovBTN-CancelaFilial", fechaCadFilial);
 	$(document).on("click", "#ovBTN-EditarFilial", editarFilial);
 
 	editarEvent();
