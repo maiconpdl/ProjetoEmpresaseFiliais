@@ -2,8 +2,10 @@ var Empresas = null;
 var Empresa = null;
 var Filiais = null;
 var Filial = null;
-var tipoDeCadastro = null;
-var empresaAberta = null;
+var tipoDeCadastro = null; //para usar nos botões de Salvar
+var empresaAberta = null; //Para Saber qual empresa esta aberta e editar as filiais
+
+//Define os atributos da empresa
 function newEmpresa(){
 	return {
 		codigo : '',
@@ -30,14 +32,17 @@ function newEmpresa(){
 	};
 }
 
+//Abre um novo Form para cadastro de empresa
 function cadastraEmpresa(){
+	//Cria uma nova empresa
 	Empresa = newEmpresa();
 	Filiais = [];
-
-	
-	
+	defineCampos();	
 	mostraFilial();
+	//Define o cadastro como empresa. O botão salvar recebe o ID Empresa
 	tipoDeCadastro = "Empresa";
+
+	//Reseta o Form
 	$("#ovTXT-Codigo").val(Empresa.codigo);
 	$("#ovTXT-NomeFantasia").val(Empresa.nomeFantasia);
 	$("#ovTXT-DataFundacao").val(Empresa.data);
@@ -62,9 +67,11 @@ function cadastraEmpresa(){
 	$("#ovTXT-Email").val(Empresa.email);
 	$("#ovTXT-Telefone").val(Empresa.telefone);
 	$("#ovTXT-Codigo").prop("disabled", false);
+	//Define aba Empresa para abrir como padrão
 	$("#empresa-tab").tab("show");
-	//$("#filial-tab").prop("disabled", true);
+	//Chama função para adicionar os botões.
 	mostraBotoesModal();
+	//Mostra o Modal Empresa
 	$("#modal-cadastroEmpresa").modal("show");
 	$("#ovTXT-Codigo").focus();
 
@@ -72,64 +79,67 @@ function cadastraEmpresa(){
 
 function salvarEmpresa(){
 
-	$("#ovTXT-Codigo").css("border", '1px solid grey');
-	$("#ovTXT-NomeFantasia").css("border", '1px solid grey');
-	$("#ovTXT-RazaoSocial").css("border", '1px solid grey');
-	$("#ovTXT-CNPJ").css("border", '1px solid grey');
-	$("#ovTXT-Endereco").css("border", '1px solid grey');
+	defineCampos();
 
+	//Cria variável para controle de campos vazios.
+	var campoVazio = false;
 
-
-
+	/*Verifica se algum campo obrigatório está vazio.
+	Se sim, define a borda do campo para vermelho e coloca
+	o valor true na variável campoVazio. Todos os campos obrigatórios
+	em branco ficarao vermelhos.*/
 	if($("#ovTXT-Codigo").val() == "") {
-		alert("Preencha todos os campos obrigatórios!");
 		$("#ovTXT-Codigo").css("border", '1px solid red');
-		return;
-
-	}else{
-		if($("#ovTXT-NomeFantasia").val() == "") {
-			alert("Preencha todos os campos obrigatórios!");
-			$("#ovTXT-NomeFantasia").css("border", '1px solid red');
-			return;
-		}else{
-			if($("#ovTXT-RazaoSocial").val() == "") {
-				alert("Preencha todos os campos obrigatórios!");
-				$("#ovTXT-RazaoSocial").css("border", '1px solid red');
-				return;
-			}else{
-				if($("#ovTXT-CNPJ").val() == "") {
-					alert("Preencha todos os campos obrigatórios!");
-					$("#ovTXT-CNPJ").css("border", '1px solid red');
-					return;
-				}else{
-					if($("#ovTXT-Endereco").val() == "") {
-						alert("Preencha todos os campos obrigatórios!");
-						$("#ovTXT-Endereco").css("border", '1px solid red');
-						return;
-					}
-				}
-			}
-		}
+		campoVazio = true;
+		
 	}
-	
+	if($("#ovTXT-NomeFantasia").val() == "") {
+		
+		$("#ovTXT-NomeFantasia").css("border", '1px solid red');
+		campoVazio = true;
+	}
+	if($("#ovTXT-RazaoSocial").val() == "") {
+		
+		$("#ovTXT-RazaoSocial").css("border", '1px solid red');
+		campoVazio = true;
+	}
+	if($("#ovTXT-CNPJ").val() == "") {
+		
+		$("#ovTXT-CNPJ").css("border", '1px solid red');
+		campoVazio = true;
+	}
+	if($("#ovTXT-Endereco").val() == "") {
+		
+		$("#ovTXT-Endereco").css("border", '1px solid red');
+		campoVazio = true;
+	}
+	/*Verifica se a variável campoVazio tem o valor true.
+	Se sim, algum campo obrigatório está em branco, mostrando
+	mensagem para preencher os campos e para a execução.*/
+	if(campoVazio){
+		alert("Preencha todos os campos obrigatórios!");
+		return;
+	}
 
+	//Pega os valores dos campos e adiciona as variáveis da Empresa
 	Empresa.codigo = $("#ovTXT-Codigo").val();
 	Empresa.nomeFantasia = $("#ovTXT-NomeFantasia").val();
 	Empresa.data = $("#ovTXT-DataFundacao").val();
 
+	//Verifica os checkbox marcados
 	Empresa.razaoSocial = $("#ovTXT-RazaoSocial").val();
 	let CBSituacao = document.getElementById('ovCB-Situacao');
 	if(CBSituacao.checked){
-		Empresa.situacao = "Ativo";
+		Empresa.situacao = 1;
 	}else{
-		Empresa.situacao = "Inativo";
+		Empresa.situacao = 0;
 	}	
 
 	let CBCooperativa = document.getElementById('ovCB-Cooperativa');
 	if(CBCooperativa.checked){
-		Empresa.cooperativa = "Sim";
+		Empresa.cooperativa = 1;
 	}else{
-		Empresa.cooperativa = "Não";
+		Empresa.cooperativa = 0;
 	}
 
 	Empresa.qtdFuncionarios = $("#ovTXT-QtdFuncionarios").val();
@@ -144,8 +154,11 @@ function salvarEmpresa(){
 	Empresa.descricao = $("#ovTXT-Descricao").val();
 	Empresa.email = $("#ovTXT-Email").val();
 	Empresa.telefone = $("#ovTXT-Telefone").val();
+	/*A variável filiais em empresa, recebe o vetor onde 
+	onde foram gravadas as filiais.*/
 	Empresa.filiais = Filiais;
 
+	//Verifica se a empresa já esta cadastrada.
 	var empresaCadastrada = Empresas.filter(function(empresa){
 		return empresa.codigo == Empresa.codigo;
 	}).length > 0;
@@ -158,15 +171,19 @@ function salvarEmpresa(){
 		});
 
 	else
+		//Adiciona a Empresa em Empresas.
 		Empresas.push(Empresa);
 
-
+	//Fecha o modal Empresa
 	$("#modal-cadastroEmpresa").modal("hide");
+	//Listar as empresas.
 	mostraEmpresa();
 
 }
 
 function mostraEmpresa(){
+	/*Lista as Empresas e adiciona os botões editar e remover
+	para cada item.*/
 	$("#ovTab-Empresas tbody").html("");
 	Empresas.map(function(empresa, index){
 		let acoesEmpresa = "<button type='button'"
@@ -182,12 +199,17 @@ function mostraEmpresa(){
 
 		+ "<i class=\"fa fa-trash-alt\">" + "</i>"
 		+ "</button>";
-
+		var situacaoE = null;
+		if(empresa.situacao == 1){
+			situacaoE = "Ativo";
+			}else{
+			situacaoE = "Inativo";
+		}
 		let line = "<tr>"
 		+ "<td>" + empresa.codigo + "</td>"
 		+ "<td>" + empresa.cnpj + "</td>"
 		+ "<td>" + empresa.nomeFantasia + "</td>"
-		+ "<td>" + empresa.situacao + "</td>"
+		+ "<td>" + situacaoE + "</td>"
 		+ "<td>" + acoesEmpresa + "</td>"
 		+ "</tr>";
 		$("#ovTab-Empresas tbody").append(line);
@@ -203,6 +225,8 @@ function editarEmpresa(codigoEmpresa){
 		return empresa.codigo == codigoEmpresa;
 	})[0];
 	
+	/*Filiais recebe as filiais cadastradas na empresa atual dentro de 
+	Empresa.filiais*/
 	Filiais = Empresa.filiais;
 	empresaAberta = codigoEmpresa;
 
@@ -212,14 +236,14 @@ function editarEmpresa(codigoEmpresa){
 	$("#ovTXT-RazaoSocial").val(Empresa.razaoSocial);
 
 	let CBSituacao = document.getElementById('ovCB-Situacao');
-	if(Empresa.situacao == "Ativo"){
+	if(Empresa.situacao == 1){
 		CBSituacao.checked = true;
 	}else{
 		CBSituacao.checked = false;
 	}
 
 	let CBCooperativa = document.getElementById('ovCB-Cooperativa');
-	if(Empresa.cooperativa == "Sim"){
+	if(Empresa.cooperativa == 1){
 		CBCooperativa.checked = true;
 	}else{
 		CBCooperativa.checked = false;
@@ -241,6 +265,7 @@ function editarEmpresa(codigoEmpresa){
 	mostraFilial();
 	$("#modal-cadastroEmpresa").modal("show");
 	$("#ovTXT-Codigo").focus();
+	//Bloqueia a edição do campo código.
 	$("#ovTXT-Codigo").prop("disabled", true);
 
 }
@@ -270,7 +295,7 @@ function removerEmpresa(codigoEmpresa){
 
 
 
-
+//Definindo atributos de uma filial.
 function newFilial(){
 	return {
 
@@ -279,11 +304,11 @@ function newFilial(){
 		sigla : '',
 		cnpj : '',
 		inscricaoEstadual : '',
-		situacao : '',
+		situacao : null,
 		cidade : '',
 		cep : '',
 		bairro : '',
-		centroDist : '',
+		centroDist : null,
 		endereco : '',
 		telefone : '',
 		email: '',
@@ -291,8 +316,11 @@ function newFilial(){
 }
 
 function cadastraFilial(){
-
+	//Cria uma nova filial
 	Filial = newFilial();
+	defineCampos();
+	/*Gravando que o modal aberto é o de Filial.
+	Assim o botão salvar recebe o ID Filial.*/
 	tipoDeCadastro = "Filial";
 	$("#ovTXT-CodigoFilial").val(Filial.codigo);
 	$("#ovTXT-DescricaoFilial").val(Filial.descricao);
@@ -312,7 +340,7 @@ function cadastraFilial(){
 	mostraBotoesModal();
 	$("#ovTXT-CodigoFilial").prop("disabled", false);
 
-	
+	$("#ovTXT-CodigoFilial").focus();
 	$("#modal-cadastroFilial").modal("show");
 
 }
@@ -320,37 +348,35 @@ function cadastraFilial(){
 
 function salvarFilial(){
 
-	$("#ovTXT-CodigoFilial").css("border", '1px solid grey');
-	$("#ovTXT-DescricaoFilial").css("border", '1px solid grey');
-	$("#ovTXT-cnpjFilial").css("border", '1px solid grey');
-	$("#ovTXT-Endereco").css("border", '1px solid grey');
+	defineCampos();
 
-
-
+	//Verificação de campos obrigatórios vazios.
+	var campoVazio = false;
 	if($("#ovTXT-CodigoFilial").val() == "") {
-		alert("Preencha todos os campos obrigatórios!");
+		
 		$("#ovTXT-CodigoFilial").css("border", '1px solid red');
-		return;
+		campoVazio = true;
 
-	}else{
-		if($("#ovTXT-DescricaoFilial").val() == "") {
-			alert("Preencha todos os campos obrigatórios!");
-			$("#ovTXT-DescricaoFilial").css("border", '1px solid red');
-			return;
-		}else{
-			if($("#ovTXT-cnpjFilial").val() == "") {
-				alert("Preencha todos os campos obrigatórios!");
-				$("#ovTXT-cnpjFilial").css("border", '1px solid red');
-				return;
-			}else{
-				if($("#ovTXT-EnderecoFilial").val() == "") {
-					alert("Preencha todos os campos obrigatórios!");
-					$("#ovTXT-EnderecoFilial").css("border", '1px solid red');
-					return;
-				}
-			}
-		}
 	}
+		if($("#ovTXT-DescricaoFilial").val() == "") {
+			
+			$("#ovTXT-DescricaoFilial").css("border", '1px solid red');
+			campoVazio = true;
+		}
+			if($("#ovTXT-cnpjFilial").val() == "") {
+			
+				$("#ovTXT-cnpjFilial").css("border", '1px solid red');
+				campoVazio = true;
+			}
+				if($("#ovTXT-EnderecoFilial").val() == "") {
+					
+					$("#ovTXT-EnderecoFilial").css("border", '1px solid red');
+					campoVazio = true;
+				}
+		if(campoVazio){
+			alert("Preencha todos os campos obrigatórios!");
+			return;
+		}
 
 
 	Filial.codigo = $("#ovTXT-CodigoFilial").val();
@@ -360,9 +386,9 @@ function salvarFilial(){
 	Filial.inscricaoEstadual = $("#ovTXT-InscricaoEstadual").val();
 	let CBSituacaoFilial = document.getElementById('ovCB-SituacaoFilial');
 	if (CBSituacaoFilial.checked) {
-		Filial.situacao = "Ativo";
+		Filial.situacao = 1;
 	}else{
-		Filial.situacao = "Inativo";
+		Filial.situacao = 0;
 	}
 
 	Filial.cidade = $("#ovTXT-CidadeFilial").val();
@@ -370,9 +396,9 @@ function salvarFilial(){
 	Filial.bairro = $("#ovTXT-BairroFilial").val();
 	let CBCentroDist = document.getElementById('ovCB-CentroDistribuicao');
 	if (CBCentroDist.checked) {
-		Filial.centroDist = "Sim";
+		Filial.centroDist = 1;
 	}else{
-		Filial.centroDist = "Não";
+		Filial.centroDist = 0;
 	}
 
 	Filial.endereco = $("#ovTXT-EnderecoFilial").val();
@@ -388,8 +414,7 @@ function salvarFilial(){
 		Filiais.map(function(filial, index){
 			if(filial.codigo == Filial.codigo){
 				filial.situacao == Filial.situacao;
-				alert("Passou");
-			}
+							}
 		});
 	}else{
 		Filiais.push(Filial);
@@ -428,13 +453,18 @@ function mostraFilial(){
 		+ "data-bs-dismiss='modal-cadastroFilial'>"
 		+ "<i class=\"fa fa-trash-alt\">" + "</i>"
 		+ "</button>";
-
+		var situacaoF = null;
+		if(filial.situacao == 1){
+			situacaoF = "Ativo";
+			}else{
+			situacaoF = "Inativo";
+		}
 
 		let line = "<tr>"
 		+ "<td>" + filial.codigo + "</td>"
 		+ "<td>" + filial.cnpj + "</td>"
 		+ "<td>" + filial.descricao + "</td>"
-		+ "<td>" + filial.situacao + "</td>"
+		+ "<td>" + situacaoF + "</td>"
 		+ "<td>" + acoesFilial + "</td>"
 		+ "</tr>";
 		$("#ovTab-Filiais tbody").append(line);
@@ -459,14 +489,14 @@ function editarFilial(codigoFilial){
 	$("#ovTXT-InscricaoFilial").val(Filial.inscricaoEstadual);
 
 	let CBSituacaoFilial = document.getElementById('ovCB-SituacaoFilial');
-	if(Filial.situacao == "Ativo"){
+	if(Filial.situacao == 1){
 		CBSituacaoFilial.checked = true;
 	}else{
 		CBSituacaoFilial.checked = false;
 	}
 
 	let CBCentroDist = document.getElementById('ovCB-CentroDistribuicao');
-	if(Filial.cooperativa == "Sim"){
+	if(Filial.cooperativa == 1){
 		CBCentroDist.checked = true;
 	}else{
 		CBCentroDist.checked = false;
@@ -491,23 +521,24 @@ function editarFilial(codigoFilial){
 
 function removerFilial(codigoFilial){
 	
-	editaEmpresa2 = Empresas.filter(function(empresa, index){
+	var Empresa = Empresas.filter(function(empresa, index){
 		return empresa.codigo == empresaAberta;
 	})[0];
 
 
 	
-	var filialSel = editaEmpresa2.filiais.filter(function(filial, index){
+	var Filial = Empresa.filiais.filter(function(filial, index){
 		return filial.codigo == codigoFilial;
 	})[0];
 
 	if(!confirm("Remover a filial "
-		+ filialSel.descricao + "?"))
+		+ Filial.descricao + "?"))
 		return;
 	
-	editaEmpresa2.filiais = editaEmpresa2.filiais.filter(function(filial, index){
+	Empresa.filiais = Empresa.filiais.filter(function(filial, index){
 		return filial.codigo != codigoFilial;
 	});
+	Filiais = Empresa.filiais;
 	mostraFilial();
 }
 
@@ -517,6 +548,8 @@ function removerFilial(codigoFilial){
 
 
 function editarEvent(){
+	/*definindo ação para os botões de edição das listas de
+	Empresas e Filiais*/
 	$(".btn-EditarEmpresa").each(function(indice, btn){
 		$(btn).on("click", function(){
 			var codigoEmpresa = $(this).data("codigoempresa");
@@ -534,7 +567,8 @@ function editarEvent(){
 }
 
 function eventoRemover(){
-
+	/*definindo ação para os botões de remoção das listas de
+	Empresas e Filiais*/
 	$(".btn-RemoverEmpresa").each(function(indice, btn){
 		$(btn).on("click", function(){
 			var codigoEmpresa = $(this).data("codigoempresa");
@@ -551,13 +585,11 @@ function eventoRemover(){
 }
 
 
-function fechaCadFilial(){
-	$("#modal-cadastroFilial").modal("hide");
-	cadastraEmpresa();
-}
-
 
 function mostraBotoesModal(){
+	/*Definindo os botões Salvar e Cancelar.
+	Os botões receberão o ID a partir do modal que está aberto
+	na variável tipoDeCadastro.*/
 	$(".divBTN-Modal").html("");
 	let botoes = 
 	"<button type='submit'" 
@@ -572,12 +604,27 @@ function mostraBotoesModal(){
 	$(".divBTN-Modal").append(line);
 }
 
+function defineCampos(){
+	/*Define os padrões dos campos obrigatórios.
+	Quando o campo ficar vermelho e o modal for fechado,
+	ao abrir um novo cadastro os campos voltam ao normal.*/
+	$("#ovTXT-Codigo").css("border", '1px solid grey');
+	$("#ovTXT-NomeFantasia").css("border", '1px solid grey');
+	$("#ovTXT-RazaoSocial").css("border", '1px solid grey');
+	$("#ovTXT-CNPJ").css("border", '1px solid grey');
+	$("#ovTXT-Endereco").css("border", '1px solid grey');
+	$("#ovTXT-CodigoFilial").css("border", '1px solid grey');
+	$("#ovTXT-DescricaoFilial").css("border", '1px solid grey');
+	$("#ovTXT-cnpjFilial").css("border", '1px solid grey');
+	$("#ovTXT-EnderecoFilial").css("border", '1px solid grey');
+}
+
 $(document).ready(function(){
 	Empresas = [];
 	Filiais = [];
 
 
-
+	//Definindo quais functions serão chamadas ao click em cada botão.
 	$(document).on("click", "#ovBTN-AdicionarEmpresa",cadastraEmpresa);
 	$(document).on("click", "#btn-SalvarEmpresa", salvarEmpresa);
 	$(document).on("click", "#ovBTN-EditarEmpresa", editarEmpresa);
